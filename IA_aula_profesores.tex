@@ -1,0 +1,917 @@
+% =====================================================================
+% IA en el Aula: guía práctica para profesores de la Universidad
+% Panamericana. Taller interactivo (Beamer, 16:9).
+% Compilar con pdflatex (dos pasadas). MiKTeX instala automáticamente
+% fontawesome5, tcolorbox y listings si faltan.
+% =====================================================================
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,shadows,positioning}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage[dvipsnames,svgnames,table]{xcolor}
+\usepackage{fontawesome5}
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{skins,breakable,listings}
+\usepackage{listings}
+\usepackage{hyperref}
+
+% ---------------------------------------------------------------
+% Paleta de colores
+% ---------------------------------------------------------------
+\definecolor{Dp}{RGB}{21,54,71}     % azul petróleo oscuro
+\definecolor{Md}{RGB}{35,110,145}   % azul medio
+\definecolor{Lt}{RGB}{120,185,205}  % azul claro
+\definecolor{Ac}{RGB}{224,122,63}   % naranja (actividades)
+\definecolor{Ac2}{RGB}{58,150,131}  % verde-azulado (tips)
+\definecolor{Al}{RGB}{193,58,58}    % rojo (advertencias)
+\definecolor{Gd}{RGB}{201,160,74}   % dorado
+\definecolor{Bg}{RGB}{250,247,241}  % crema (fondo)
+\definecolor{Wm}{RGB}{40,38,35}     % texto
+\definecolor{Pr}{RGB}{110,80,150}   % morado (ámbito profesional)
+
+% ---------------------------------------------------------------
+% Tema
+% ---------------------------------------------------------------
+\usetheme{default}
+\usecolortheme{default}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{normal text}{fg=Wm,bg=Bg}
+\setbeamercolor{structure}{fg=Md}
+\setbeamercolor{title}{fg=white,bg=Dp}
+\setbeamercolor{frametitle}{fg=white,bg=Dp}
+\setbeamercolor{section in toc}{fg=Dp}
+\setbeamercolor{subsection in toc}{fg=Md}
+\setbeamertemplate{section in toc shaded}[default][60]
+\setbeamertemplate{subsection in toc shaded}[default][60]
+\setbeamercolor{block title}{fg=white,bg=Md}
+\setbeamercolor{block body}{fg=Wm,bg=Lt!20}
+\setbeamercolor{itemize item}{fg=Ac}
+\setbeamercolor{itemize subitem}{fg=Ac2}
+\setbeamertemplate{itemize item}{\faCircle}
+\setbeamertemplate{itemize subitem}{\faAngleRight}
+\setbeamerfont{frametitle}{series=\bfseries,size=\Large}
+\setbeamerfont{title}{series=\bfseries}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{section in toc}[sections numbered]
+
+\setbeamertemplate{footline}{%
+  \leavevmode
+  \hbox{\begin{beamercolorbox}[wd=\paperwidth,ht=2.4ex,dp=1.2ex,leftskip=1em,rightskip=1em]{normal text}
+    {\color{Md!70}\scriptsize IA en el aula \textbullet\ Universidad Panamericana \hfill \insertframenumber/\inserttotalframenumber}
+  \end{beamercolorbox}}%
+}
+
+% ---------------------------------------------------------------
+% Cajas reutilizables
+% ---------------------------------------------------------------
+\newtcolorbox{actividadbox}[1][]{
+  enhanced, breakable, colback=Ac!8, colframe=Ac, boxrule=1pt,
+  arc=3mm, top=1.5mm, bottom=1.5mm, left=2mm, right=2mm,
+  fonttitle=\bfseries\color{white}, coltitle=white, colbacktitle=Ac,
+  title={\faUsers\ ACTIVIDAD \quad #1}
+}
+\newtcolorbox{tipbox}[1][EN RESUMEN]{
+  enhanced, breakable, colback=Ac2!8, colframe=Ac2, boxrule=1pt,
+  arc=3mm, top=1.5mm, bottom=1.5mm, left=2mm, right=2mm,
+  fonttitle=\bfseries\color{white}, coltitle=white, colbacktitle=Ac2,
+  title={\faLightbulb\ #1}
+}
+\newtcolorbox{warnbox}{
+  enhanced, breakable, colback=Al!8, colframe=Al, boxrule=1pt,
+  arc=3mm, top=1.5mm, bottom=1.5mm, left=2mm, right=2mm,
+  fonttitle=\bfseries\color{white}, coltitle=white, colbacktitle=Al,
+  title={\faExclamationTriangle\ CUIDADO}
+}
+\newtcolorbox{probox}{
+  enhanced, breakable, colback=Pr!7, colframe=Pr, boxrule=1pt,
+  arc=3mm, top=1.5mm, bottom=1.5mm, left=2mm, right=2mm,
+  fonttitle=\bfseries\color{white}, coltitle=white, colbacktitle=Pr,
+  title={\faBriefcase\ EN EL ÁMBITO PROFESIONAL}
+}
+\newcommand{\usocard}[3]{%
+  \begin{tcolorbox}[enhanced,colback=white,colframe=Lt,boxrule=0.8pt,
+    arc=2mm,left=2mm,right=2mm,top=1mm,bottom=1mm,
+    title={\large #1\ \textbf{#2}},fonttitle=\bfseries\color{Dp},
+    colbacktitle=Bg,coltitle=Dp]
+    #3
+  \end{tcolorbox}}
+% Tarjeta de herramienta: icono, nombre, para qué sirve, cómo ayuda
+\newcommand{\toolcard}[4]{%
+  \begin{tcolorbox}[enhanced,colback=white,colframe=Md!50,boxrule=0.6pt,
+    arc=2mm,left=1.5mm,right=1.5mm,top=0.8mm,bottom=0.8mm,
+    title={#1\ \textbf{#2}},fonttitle=\small\bfseries\color{Dp},
+    colbacktitle=Lt!25,coltitle=Dp]
+    \scriptsize\textbf{\color{Md}Para qué sirve:} #3\\[1pt]
+    \textbf{\color{Ac2}Cómo ayuda:} #4
+  \end{tcolorbox}}
+
+% Código LaTeX en diapositivas
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{Md}\bfseries,
+  commentstyle=\color{Ac2}\itshape,
+  stringstyle=\color{Ac},
+  backgroundcolor=\color{white},
+  frame=single, rulecolor=\color{Lt},
+  breaklines=true, columns=fullflexible,
+  showstringspaces=false,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {¿}{{?`}}1
+}
+
+% Estilo de etapa con color como parámetro (definido fuera de los frames)
+\tikzset{st/.style={draw=#1,fill=#1!10,rounded corners=2mm,minimum width=4.2cm,
+  minimum height=2.3cm,align=left,text width=3.9cm,font=\scriptsize}}
+
+\hypersetup{colorlinks=true, urlcolor=Ac, linkcolor=Md}
+
+\title[IA en el aula]{Inteligencia Artificial en el Aula}
+\subtitle{Guía práctica para profesores de la Universidad Panamericana}
+\author[César Galindo]{César Galindo \\ \footnotesize Profesor Investigador}
+\institute[UP]{Universidad Panamericana, Ciudad UP}
+\date{\today}
+
+\begin{document}
+
+% ---------------------------------------------------------------
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[Dp] (current page.south west) rectangle (current page.north east);
+  \fill[Md!60] (current page.north east) circle (3.2);
+  \fill[Ac!85] ([shift={(-0.6,0.6)}]current page.south west) circle (2.2);
+  \fill[Ac2!70] ([shift={(1.4,-1.0)}]current page.north west) circle (1.1);
+\end{tikzpicture}
+\begin{center}
+\vspace{0.7cm}
+{\color{white}\Huge\bfseries Inteligencia Artificial\\[2pt] en el Aula}\\[10pt]
+{\color{Gd!90}\Large Guía práctica para profesores}\\[2pt]
+{\color{white!85}\large Claude, investigación profunda, Bloomberg, \LaTeX\ y GitHub}\\[18pt]
+{\color{white}\faRobot\Large}\\[12pt]
+{\color{white}\large César Galindo}\\
+{\color{Gd!90}\normalsize Profesor Investigador}\\[2pt]
+{\color{Lt}\normalsize Universidad Panamericana, Ciudad UP \quad\textbullet\quad \today}\\[4pt]
+{\color{white!70}\small \href{mailto:jcgalindo@up.edu.mx}{jcgalindo@up.edu.mx}}
+\end{center}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Antes de empezar\dots}
+\begin{center}
+\Large\color{Dp}\faHandPaper
+\end{center}
+\vspace{8pt}
+\begin{center}
+\large\emph{``¿Cuántas veces han usado IA generativa este mes?''}
+\end{center}
+\vspace{10pt}
+\begin{itemize}
+  \item Levanten la mano: \textbf{nunca}.
+  \item Levanten la mano: \textbf{1--2 veces}.
+  \item Levanten la mano: \textbf{todos los días}.
+  \item Y una más: \textbf{¿alguien ya usó Claude con su cuenta de la UP?}
+\end{itemize}
+\vspace{8pt}
+\centering\small Cualquier respuesta es válida. Esta sesión es para decidir con información, no para convencer a nadie de nada.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{¿A dónde vamos hoy?}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\tableofcontents
+\column{0.42\textwidth}
+\begin{tipbox}[LO QUE SE LLEVAN]
+\small
+\begin{itemize}
+  \item Un mapa de herramientas: qué hace cada una y cuándo conviene.
+  \item Una receta para escribir buenas instrucciones.
+  \item Un flujo de trabajo para exámenes en \LaTeX\ versionados en GitHub.
+  \item Por qué todo esto importa para la vida profesional de sus alumnos.
+\end{itemize}
+\end{tipbox}
+\end{columns}
+\end{frame}
+
+\AtBeginSection[]{
+\begin{frame}{Agenda}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+% =====================================================================
+\section{¿Qué es esto de la ``IA''?}
+% =====================================================================
+
+\begin{frame}{Una analogía, sin tecnicismos}
+\begin{center}
+\Large\color{Dp}\faComments
+\end{center}
+\vspace{6pt}
+\begin{center}
+\parbox{0.85\textwidth}{\centering\large
+Un asistente como Claude, ChatGPT o Gemini es, en el fondo,\\[4pt]
+\textbf{\color{Ac}un autocompletado extremadamente leído.}}
+\end{center}
+\vspace{10pt}
+\begin{itemize}
+  \item Leyó una fracción enorme de todo lo escrito en internet, libros y código.
+  \item Aprendió qué palabra suele seguir a cuál, en qué contexto.
+  \item Cuando le escriben algo, va prediciendo \emph{la continuación más probable}.
+  \item Los asistentes actuales además \textbf{usan herramientas}: buscan en la web, leen PDFs, ejecutan cálculos, escriben código.
+\end{itemize}
+\vspace{6pt}
+\begin{tipbox}
+No ``entiende'' como una persona ni tiene criterio propio. Es estadística de lenguaje a una escala descomunal, más la capacidad de consultar fuentes.
+\end{tipbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Mitos vs.\ realidad}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{tcolorbox}[enhanced,colback=Al!6,colframe=Al,arc=2mm,
+  title={\faTimesCircle\ NO hace esto},fonttitle=\bfseries\color{white},colbacktitle=Al]
+\begin{itemize}\small
+  \item No sabe si algo es verdadero, solo si es \emph{plausible}
+  \item No recuerda conversaciones pasadas, salvo que la herramienta lo active o se lo des tú
+  \item No reemplaza tu criterio pedagógico ni disciplinar
+  \item No garantiza que una cita o cifra exista
+\end{itemize}
+\end{tcolorbox}
+\column{0.5\textwidth}
+\begin{tcolorbox}[enhanced,colback=Ac2!6,colframe=Ac2,arc=2mm,
+  title={\faCheckCircle\ SÍ hace esto},fonttitle=\bfseries\color{white},colbacktitle=Ac2]
+\begin{itemize}\small
+  \item Genera borradores rápidos de casi cualquier texto
+  \item Adapta un contenido a distintos niveles
+  \item Resume, reorganiza, traduce y reformula
+  \item Escribe \LaTeX, código y fórmulas de hoja de cálculo
+  \item Busca y resume fuentes (investigación profunda)
+\end{itemize}
+\end{tcolorbox}
+\end{columns}
+\vspace{8pt}
+\begin{center}
+\large\color{Dp}Trátenla como \textbf{borrador}, nunca como \textbf{producto final}.
+\end{center}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Las ``alucinaciones''}
+\begin{warnbox}
+La IA puede inventar datos, citas, fechas o nombres \textbf{con total seguridad}, sin avisar que no sabe. A esto se le llama \emph{alucinación}.
+\end{warnbox}
+\vspace{8pt}
+\begin{center}
+\begin{tcolorbox}[enhanced,colback=white,colframe=Dp!40,arc=2mm,width=0.9\textwidth]
+\small\emph{``Cita tres estudios sobre aprendizaje basado en proyectos.''}\\[4pt]
+$\rightarrow$ Puede devolver tres referencias que \textbf{suenan reales} pero no existen.\\[4pt]
+$\rightarrow$ Las herramientas con búsqueda web reducen el riesgo porque \textbf{enlazan la fuente}, pero no lo eliminan: hay que abrir el enlace.
+\end{tcolorbox}
+\end{center}
+\vspace{8pt}
+\begin{center}
+\large\color{Dp}\faSearch\ \color{Wm}\textbf{Todo lo que genera se revisa antes de usarse.}
+\end{center}
+\end{frame}
+
+% =====================================================================
+\section{El mapa de herramientas}
+% =====================================================================
+
+\begin{frame}{El mapa completo}
+\begin{columns}[T]
+\column{0.24\textwidth}
+{\color{Md}\textbf{\faComments\ Asistentes generales}}
+\begin{itemize}\small
+  \item \href{https://claude.ai}{Claude} (Anthropic)
+  \item \href{https://chatgpt.com}{ChatGPT} (OpenAI)
+  \item \href{https://gemini.google.com}{Gemini} (Google)
+  \item \href{https://copilot.microsoft.com}{Copilot} (Microsoft)
+\end{itemize}
+\column{0.24\textwidth}
+{\color{Md}\textbf{\faChalkboardTeacher\ Docencia}}
+\begin{itemize}\small
+  \item \href{https://notebooklm.google}{NotebookLM}
+  \item \href{https://www.magicschool.ai}{MagicSchool}
+  \item \href{https://diffit.me}{Diffit}
+  \item \href{https://curipod.com}{Curipod}
+  \item \href{https://www.canva.com/magic-studio/}{Canva Magic Studio}
+\end{itemize}
+\column{0.24\textwidth}
+{\color{Md}\textbf{\faSearchPlus\ Investigación}}
+\begin{itemize}\small
+  \item Research / Deep Research (Claude, ChatGPT, Gemini)
+  \item \href{https://www.perplexity.ai}{Perplexity}
+  \item \href{https://elicit.com}{Elicit}
+  \item \href{https://consensus.app}{Consensus}
+  \item \href{https://www.semanticscholar.org}{Semantic Scholar}
+\end{itemize}
+\column{0.26\textwidth}
+{\color{Pr}\textbf{\faBriefcase\ Profesionales}}
+\begin{itemize}\small
+  \item Terminal \href{https://www.bloomberg.com/professional/products/bloomberg-terminal/}{Bloomberg} + ASKB
+  \item \href{https://www.overleaf.com}{Overleaf} / \LaTeX
+  \item \href{https://github.com}{GitHub} + Copilot
+  \item Excel / Sheets con IA
+\end{itemize}
+\end{columns}
+\vspace{8pt}
+\begin{tipbox}
+Las dos primeras columnas funcionan desde el navegador y no requieren programar. Las dos últimas son las que sus alumnos encontrarán en un despacho, un banco, una consultora o un laboratorio.
+\end{tipbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Asistentes generales: para qué sirve cada uno}
+\begin{columns}[T]
+\column{0.49\textwidth}
+\toolcard{\faIcon{feather-alt}}{Claude}{redacción larga, análisis de documentos extensos (programas, reglamentos, artículos), \LaTeX\ y código.}{lee un PDF de 100 páginas y responde con citas al texto; genera exámenes directamente en \LaTeX.}
+\toolcard{\faRobot}{ChatGPT}{uso general, imágenes, análisis de datos en hojas de cálculo.}{punto de partida conocido por casi todos los alumnos; útil para mostrar en clase qué ``ven'' ellos.}
+\column{0.49\textwidth}
+\toolcard{\faGoogle}{Gemini}{integración con Docs, Sheets, Gmail y Drive.}{si su flujo vive en Google Workspace, trabaja sobre sus archivos sin copiar y pegar.}
+\toolcard{\faMicrosoft}{Copilot}{integración con Word, Excel, PowerPoint y Outlook.}{resume correos largos, propone fórmulas de Excel, arma una presentación a partir de un documento.}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Herramientas pensadas para docencia}
+\begin{columns}[T]
+\column{0.49\textwidth}
+\toolcard{\faBookOpen}{NotebookLM}{responder \emph{solo} con base en los materiales que tú subes (apuntes, lecturas, programa).}{guías de estudio, preguntas frecuentes y resúmenes en audio de tu propio curso, con referencia a la página.}
+\toolcard{\faChalkboardTeacher}{MagicSchool}{decenas de plantillas docentes: rúbricas, planeaciones, retroalimentación.}{resuelve tareas repetitivas con formularios; no hace falta escribir el prompt completo.}
+\column{0.49\textwidth}
+\toolcard{\faLayerGroup}{Diffit}{adaptar un mismo texto a distintos niveles de lectura.}{grupos heterogéneos, alumnos de intercambio, lecturas en inglés.}
+\toolcard{\faPoll}{Curipod / Canva}{presentaciones interactivas, quizzes, organizadores gráficos.}{material visual en minutos que tú ajustas al grupo.}
+\end{columns}
+\end{frame}
+
+% =====================================================================
+\section{Claude en la UP: la cuenta institucional (plan Team)}
+% =====================================================================
+
+\begin{frame}{¿Qué cambia con una cuenta institucional?}
+\begin{columns}[T]
+\column{0.52\textwidth}
+\begin{itemize}
+  \item \textbf{Privacidad}: en los planes comerciales de Anthropic (Team, Enterprise, Education), las conversaciones \textbf{no se usan para entrenar modelos} por defecto.
+  \item \textbf{Límites de uso más altos} que la cuenta gratuita: sesiones largas sin interrupciones.
+  \item \textbf{Administración central}: la universidad gestiona altas, bajas y políticas.
+  \item \textbf{Proyectos compartidos} entre colegas de una misma academia.
+\end{itemize}
+\column{0.45\textwidth}
+\begin{tcolorbox}[enhanced,colback=white,colframe=Md,arc=2mm,
+  title={\faUniversity\ Cuenta personal vs.\ UP},fonttitle=\bfseries\color{white},colbacktitle=Md]
+\scriptsize
+\begin{tabularx}{\linewidth}{@{}Xcc@{}}
+\toprule
+ & \textbf{Gratuita} & \textbf{Team UP}\\
+\midrule
+Entrena con tus datos & opcional & no\\
+Límite de uso & bajo & alto\\
+Proyectos compartidos & no & sí\\
+Gestión institucional & no & sí\\
+\bottomrule
+\end{tabularx}
+\end{tcolorbox}
+\end{columns}
+\vspace{6pt}
+\begin{warnbox}
+Aun con cuenta institucional: \textbf{no suban datos personales de alumnos} (nombres, matrículas, calificaciones). La regla de privacidad de la UP sigue mandando.
+\end{warnbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Las funciones de Claude que más sirven a un profesor}
+\begin{columns}[T]
+\column{0.49\textwidth}
+\usocard{\faFolderOpen}{Proyectos}{\small Un espacio por materia: suben el programa, la bibliografía y sus apuntes, y escriben \emph{instrucciones fijas} (``responde como profesor de Finanzas Corporativas de 5º semestre, en español, con notación del libro de Berk--DeMarzo''). Cada conversación del proyecto parte de ese contexto.}
+\usocard{\faShapes}{Artifacts}{\small Documentos, tablas, diagramas o pequeñas aplicaciones interactivas (simuladores, tarjetas de estudio) que aparecen a un lado del chat y se pueden compartir.}
+\column{0.49\textwidth}
+\usocard{\faSearchPlus}{Research}{\small Investigación profunda: Claude hace varias búsquedas, lee las fuentes y entrega un reporte con citas enlazadas.}
+\usocard{\faPlug}{Conectores}{\small Acceso a Google Drive, Gmail, Calendar y otros servicios autorizados, para trabajar sobre sus propios archivos.}
+\usocard{\faIcon{file-alt}}{Archivos}{\small Lee PDF, Word, Excel e imágenes; escribe \LaTeX, Markdown, Python o fórmulas.}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Ejemplo: un Proyecto por materia}
+\begin{tikzpicture}[
+  box/.style={draw=Md,fill=white,rounded corners=2mm,minimum width=3.1cm,minimum height=1.25cm,align=center,font=\small},
+  arr/.style={-{Stealth[length=2.5mm]},thick,Ac}]
+\node[box,fill=Lt!25] (in) {\faFileUpload\\Programa, apuntes,\\exámenes anteriores};
+\node[box,right=0.9cm of in,fill=Md!15] (proj) {\faFolderOpen\ \textbf{Proyecto}\\``Probabilidad 2026''\\+ instrucciones fijas};
+\node[box,right=0.9cm of proj,yshift=1.0cm] (o1) {\faClipboardList\ Banco de\\reactivos en \LaTeX};
+\node[box,right=0.9cm of proj,yshift=-1.0cm] (o2) {\faComment\ Guía de estudio\\y retroalimentación};
+\draw[arr] (in) -- (proj);
+\draw[arr] (proj.east) -- (o1.west);
+\draw[arr] (proj.east) -- (o2.west);
+\end{tikzpicture}
+\vspace{8pt}
+\begin{tcolorbox}[enhanced,colback=Ac!6,colframe=Ac,arc=2mm]
+\small\textbf{Instrucción fija de ejemplo:} \emph{``Eres asistente del curso Probabilidad (licenciatura, 3er semestre). Usa la notación de los apuntes adjuntos. Cuando generes ejercicios, entrégalos en \LaTeX\ con la clase \texttt{exam}, con solución dentro de \texttt{\textbackslash begin\{solution\}}. Nunca inventes referencias; si no sabes algo, dilo.''}
+\end{tcolorbox}
+\end{frame}
+
+% =====================================================================
+\section{Hablarle a la IA: el \emph{prompt}}
+% =====================================================================
+
+\begin{frame}{La receta de un buen \emph{prompt}}
+\begin{center}
+\Large\color{Dp}\textbf{Prompt} = la instrucción que le escribes a la IA
+\end{center}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.2\textwidth}\centering
+\faUserTie\Large\\[4pt]\textbf{Rol}\\{\scriptsize ¿quién debe ser?}
+\column{0.2\textwidth}\centering
+\faTasks\Large\\[4pt]\textbf{Tarea}\\{\scriptsize ¿qué necesitas?}
+\column{0.2\textwidth}\centering
+\faInfoCircle\Large\\[4pt]\textbf{Contexto}\\{\scriptsize ¿para quién, qué nivel?}
+\column{0.2\textwidth}\centering
+\faIcon{file-alt}\Large\\[4pt]\textbf{Formato}\\{\scriptsize ¿cómo lo quieres?}
+\column{0.2\textwidth}\centering
+\faCheckDouble\Large\\[4pt]\textbf{Criterio}\\{\scriptsize ¿cómo sabrás que está bien?}
+\end{columns}
+\vspace{10pt}
+\begin{tcolorbox}[enhanced,colback=Ac!6,colframe=Ac,arc=2mm]
+\small\textbf{Ejemplo:} \emph{``Eres} [rol] \textbf{profesor de Microeconomía.} \emph{Necesito} [tarea] \textbf{6 reactivos de opción múltiple sobre elasticidad,} \emph{para} [contexto] \textbf{alumnos de 2º semestre de Economía,} \emph{en} [formato] \textbf{\LaTeX\ con la clase exam y la solución de cada uno.} [criterio] \textbf{Cada distractor debe corresponder a un error típico; indica cuál.''}
+\end{tcolorbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Prompt pobre vs.\ prompt bueno}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{tcolorbox}[enhanced,colback=Al!6,colframe=Al,arc=2mm,title={\faTimesCircle\ Pobre},fonttitle=\bfseries\color{white},colbacktitle=Al]
+\centering\emph{``Hazme un examen de finanzas.''}
+\end{tcolorbox}
+\vspace{6pt}
+\small Sin nivel, sin tema, sin formato $\rightarrow$ resultado genérico e inútil.
+\column{0.48\textwidth}
+\begin{tcolorbox}[enhanced,colback=Ac2!6,colframe=Ac2,arc=2mm,title={\faCheckCircle\ Bueno},fonttitle=\bfseries\color{white},colbacktitle=Ac2]
+\centering\footnotesize\emph{``Genera un examen de 8 preguntas sobre valor presente y TIR para 4º semestre de Finanzas: 5 de cálculo y 3 de interpretación, dificultad media, en \LaTeX\ (clase exam) con puntos por pregunta y soluciones paso a paso. Usa tasas y flujos realistas para México.''}
+\end{tcolorbox}
+\vspace{6pt}
+\small Específico $\rightarrow$ resultado directamente compilable (después de revisarlo).
+\end{columns}
+\vspace{8pt}
+\begin{tipbox}
+Iteren: \emph{``la pregunta 3 es demasiado fácil; súbele un nivel''}, \emph{``cambia los datos para una versión B''}. La primera respuesta es solo el primer borrador.
+\end{tipbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Actividad 1}
+\begin{actividadbox}[\faClock\ 5 minutos, en parejas]
+\begin{enumerate}
+  \item Piensen en una tarea real que hagan seguido (planear una clase, hacer un examen, escribir retroalimentación).
+  \item Escriban un prompt con las 5 partes: \textbf{Rol + Tarea + Contexto + Formato + Criterio}.
+  \item Pruébenlo en Claude (o en la herramienta que prefieran) y compártanlo con la pareja de al lado.
+\end{enumerate}
+\end{actividadbox}
+\vspace{10pt}
+\centering\large\color{Dp} Al terminar, 2 o 3 parejas leen su prompt y muestran el resultado.
+\end{frame}
+
+% =====================================================================
+\section{Investigación profunda (\emph{deep research})}
+% =====================================================================
+
+\begin{frame}{¿Qué es la ``investigación profunda''?}
+\begin{columns}[T]
+\column{0.5\textwidth}
+Un chat normal responde con lo que ya ``sabe''. Un modo de investigación profunda:
+\begin{enumerate}\small
+  \item descompone la pregunta en sub-preguntas,
+  \item hace decenas de búsquedas en la web,
+  \item lee las páginas y documentos encontrados,
+  \item entrega un reporte estructurado \textbf{con citas enlazadas}.
+\end{enumerate}
+Tarda de minutos a media hora; no es instantáneo.
+\column{0.47\textwidth}
+\begin{tcolorbox}[enhanced,colback=white,colframe=Md,arc=2mm,
+  title={\faSearchPlus\ Dónde encontrarla},fonttitle=\bfseries\color{white},colbacktitle=Md]
+\footnotesize
+\begin{itemize}
+  \item \textbf{Claude}: botón \emph{Research}
+  \item \textbf{ChatGPT}: \emph{Deep research}
+  \item \textbf{Gemini}: \emph{Deep Research}
+  \item \textbf{Perplexity}: respuestas rápidas con fuentes
+  \item \textbf{Elicit}, \textbf{Consensus}, \textbf{Semantic Scholar}: literatura académica revisada por pares
+\end{itemize}
+\end{tcolorbox}
+\end{columns}
+\vspace{6pt}
+\begin{tipbox}
+Las herramientas generales buscan en la web abierta; Elicit, Consensus y Semantic Scholar buscan en bases de artículos científicos. Para una revisión de literatura, combinen ambas.
+\end{tipbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Un flujo de trabajo en tres etapas}
+\begin{tikzpicture}[arr/.style={-{Stealth[length=2.5mm]},very thick,Dp}]
+\node[st=Md] (a) {\textbf{\small 1. Descubrir}\\[2pt]Research / Deep Research o Perplexity para el panorama; Elicit o Consensus para artículos.\\[2pt]\emph{Salida:} lista de fuentes.};
+\node[st=Al,right=0.6cm of a] (b) {\textbf{\small 2. Verificar}\\[2pt]Abrir cada enlace. ¿Existe? ¿Dice lo que el reporte afirma? ¿Es fuente primaria?\\[2pt]\emph{Salida:} fuentes confirmadas.};
+\node[st=Ac2,right=0.6cm of b] (c) {\textbf{\small 3. Sintetizar}\\[2pt]Subir las fuentes confirmadas a un Proyecto de Claude o a NotebookLM y trabajar solo sobre ellas.\\[2pt]\emph{Salida:} lectura, caso o examen.};
+\draw[arr] (a) -- (b);
+\draw[arr] (b) -- (c);
+\end{tikzpicture}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\usocard{\faChalkboardTeacher}{En docencia}{\small Actualizar un caso de estudio con datos de este año; preparar una lectura sobre una reforma reciente.}
+\column{0.48\textwidth}
+\usocard{\faFlask}{En investigación}{\small Mapear la literatura de un tema nuevo antes de leer a fondo; detectar artículos que citan a uno clave.}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Actividad 2}
+\begin{actividadbox}[\faClock\ 8 minutos, individual]
+\begin{enumerate}
+  \item Elijan un tema de su materia que haya cambiado en los últimos dos años.
+  \item Lancen una investigación profunda: \emph{``¿Qué ha cambiado en [tema] desde 2024? Dame un reporte de una página con fuentes primarias.''}
+  \item Abran \textbf{tres} de las fuentes citadas. ¿Existen? ¿Dicen lo que el reporte afirma?
+\end{enumerate}
+\end{actividadbox}
+\vspace{8pt}
+\centering\large\color{Dp} Comentamos: ¿cuántas de las tres citas resistieron la verificación?
+\end{frame}
+
+% =====================================================================
+\section{Bloomberg: datos financieros con IA}
+% =====================================================================
+
+\begin{frame}{La Terminal Bloomberg: qué es y para qué sirve}
+\begin{columns}[T]
+\column{0.52\textwidth}
+\begin{itemize}\small
+  \item La plataforma de datos de referencia en bancos, casas de bolsa, fondos y tesorerías: precios en tiempo real, estados financieros, bonos, divisas, materias primas, noticias y análisis.
+  \item Se usa con \textbf{funciones} (``mnemónicos''): \texttt{DES} describe una empresa, \texttt{FA} sus estados financieros, \texttt{GP} grafica precios, \texttt{ECO} el calendario económico.
+  \item Tiene complemento para \textbf{Excel} y \textbf{BQL / BQuant} para análisis en Python.
+\end{itemize}
+\column{0.45\textwidth}
+\begin{tcolorbox}[enhanced,colback=white,colframe=Pr,arc=2mm,
+  title={\faRobot\ ASKB: la IA dentro de Bloomberg},fonttitle=\bfseries\color{white},colbacktitle=Pr]
+\footnotesize
+\begin{itemize}
+  \item Interfaz conversacional lanzada en 2026: preguntas en lenguaje natural sobre los datos y noticias de Bloomberg.
+  \item Responde con \textbf{atribución a la fuente} dentro de la Terminal.
+  \item Cuando hay análisis de datos, entrega el código BQL para llevarlo a Excel o BQuant.
+\end{itemize}
+\end{tcolorbox}
+\end{columns}
+\vspace{2pt}
+\begin{probox}
+\small Un analista le pregunta a ASKB, verifica la respuesta contra los datos y la lleva a un modelo. Ese criterio de verificación es lo que el aula debe entrenar.
+\end{probox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Bloomberg en el aula: cómo ayuda}
+\begin{columns}[T]
+\column{0.49\textwidth}
+\toolcard{\faCertificate}{Bloomberg Market Concepts (BMC)}{curso en línea de unas 8--12 horas sobre economía, divisas, renta fija y acciones, con certificado.}{tarea extracurricular con valor curricular; el profesor puede crear un código de grupo y ver el avance de sus alumnos.}
+\toolcard{\faChartLine}{Datos reales para clase}{series de tasas, tipo de cambio, curvas de bonos, múltiplos de empresas mexicanas.}{ejercicios con datos de esta semana, no del libro de 2015.}
+\column{0.49\textwidth}
+\toolcard{\faFileExcel}{Excel + Bloomberg}{descargar datos a una hoja con fórmulas del complemento.}{los alumnos construyen modelos de valuación como en un banco.}
+\toolcard{\faComments}{ASKB + verificación}{preguntar en lenguaje natural y contrastar con la función original.}{ejercicio de pensamiento crítico: ¿coincide la respuesta de la IA con \texttt{FA}?}
+\end{columns}
+\vspace{4pt}
+\begin{tipbox}
+Pregunten en su facultad por el acceso a terminales en los laboratorios de la UP. Sin terminal, BMC y los datos públicos de Banxico, INEGI y la BMV permiten ejercicios equivalentes.
+\end{tipbox}
+\end{frame}
+
+% =====================================================================
+\section{\LaTeX\ para preparar exámenes}
+% =====================================================================
+
+\begin{frame}{¿Por qué \LaTeX\ para exámenes?}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{itemize}
+  \item \textbf{Fórmulas impecables}: matemáticas, estadística, finanzas, física, química.
+  \item \textbf{Versiones A/B} con el mismo archivo: cambian los datos, no el formato.
+  \item \textbf{Soluciones en el mismo archivo}: una línea decide si se imprimen.
+  \item \textbf{Puntos y tabla de calificación} automáticos.
+  \item Texto plano: se versiona en GitHub y la IA lo escribe muy bien.
+\end{itemize}
+\column{0.47\textwidth}
+\toolcard{\faLeaf}{Overleaf}{editor de \LaTeX\ en el navegador, sin instalar nada; colaboración en tiempo real.}{arrancar hoy mismo; compartir un examen con el coordinador de academia.}
+\toolcard{\faIcon{feather-alt}}{Claude}{escribe y corrige \LaTeX: ``conviértelo a la clase exam'', ``¿por qué no compila?''.}{elimina la curva de aprendizaje inicial.}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Un examen mínimo con la clase \texttt{exam}}
+\begin{columns}[T]
+\column{0.56\textwidth}
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\documentclass[12pt]{exam}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+% \printanswers  % <- quita el % para la clave
+\begin{document}
+\begin{center}\textbf{Finanzas I -- Examen 1}\end{center}
+Nombre: \underline{\hspace{6cm}}
+\begin{center}\gradetable[h][questions]\end{center}
+\begin{questions}
+\question[4] Calcula el valor presente de
+  \$10{,}000 a 3 años con $r=10\%$.
+  \begin{solution}
+    $VP = 10000/(1.1)^3 = 7513.15$
+  \end{solution}
+\question[2] La TIR es la tasa que:
+  \begin{choices}
+    \choice maximiza el VPN
+    \CorrectChoice hace el VPN igual a cero
+    \choice iguala la tasa libre de riesgo
+  \end{choices}
+\end{questions}
+\end{document}
+\end{lstlisting}
+\column{0.41\textwidth}
+\begin{tcolorbox}[enhanced,colback=white,colframe=Lt,arc=2mm,
+  title={\faListOl\ Lo que hace cada parte},fonttitle=\bfseries\color{Dp},colbacktitle=Bg]
+\scriptsize
+\begin{itemize}
+  \item \texttt{\textbackslash question[4]}: pregunta de 4 puntos.
+  \item \texttt{\textbackslash gradetable}: tabla de calificación automática.
+  \item \texttt{solution}: solo se imprime con \texttt{\textbackslash printanswers}.
+  \item \texttt{\textbackslash CorrectChoice}: marca la correcta en la clave.
+\end{itemize}
+\end{tcolorbox}
+\vspace{4pt}
+\begin{tipbox}
+\scriptsize Un archivo, dos PDF: el del alumno y la clave del profesor.
+\end{tipbox}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Flujo de trabajo: de la idea al examen impreso}
+\begin{tikzpicture}[
+  st/.style={draw=Md,fill=white,rounded corners=2mm,minimum width=2.45cm,minimum height=1.6cm,align=center,text width=2.3cm,font=\scriptsize},
+  arr/.style={-{Stealth[length=2mm]},thick,Ac}]
+\node[st] (s1) {\faLightbulb\\[2pt]\textbf{Temario}\\objetivos y nivel};
+\node[st,right=0.35cm of s1] (s2) {\faIcon{feather-alt}\\[2pt]\textbf{Claude}\\borrador en \LaTeX\ (clase exam)};
+\node[st,right=0.35cm of s2,draw=Al] (s3) {\faSearch\\[2pt]\textbf{Revisión}\\resolver cada pregunta uno mismo};
+\node[st,right=0.35cm of s3] (s4) {\faLeaf\\[2pt]\textbf{Overleaf}\\compilar versión A y B};
+\node[st,right=0.35cm of s4] (s5) {\faGithub\\[2pt]\textbf{GitHub}\\guardar en repo privado};
+\draw[arr] (s1) -- (s2); \draw[arr] (s2) -- (s3); \draw[arr] (s3) -- (s4); \draw[arr] (s4) -- (s5);
+\end{tikzpicture}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{tcolorbox}[enhanced,colback=Ac!6,colframe=Ac,arc=2mm]
+\scriptsize\textbf{Prompt para versión B:} \emph{``Con este examen en \LaTeX, genera una versión B: mismos temas y dificultad, datos numéricos distintos, opciones en otro orden. Recalcula todas las soluciones y muéstrame el cálculo.''}
+\end{tcolorbox}
+\column{0.48\textwidth}
+\begin{warnbox}
+\scriptsize La IA se equivoca en aritmética y en detalles conceptuales. \textbf{Resuelvan cada pregunta ustedes} antes de aplicarla; la clave es responsabilidad del profesor.
+\end{warnbox}
+\end{columns}
+\end{frame}
+
+% =====================================================================
+\section{GitHub para profesores}
+% =====================================================================
+
+\begin{frame}{GitHub: qué es y para qué sirve}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{itemize}
+  \item Plataforma para guardar archivos con \textbf{historial completo de cambios}: quién cambió qué, cuándo y por qué.
+  \item Es el estándar de la industria para software, ciencia de datos y, cada vez más, documentación técnica.
+  \item Repositorios \textbf{privados} (exámenes, claves) y \textbf{públicos} (apuntes, ejercicios, sitio del curso).
+\end{itemize}
+\column{0.47\textwidth}
+\begin{tcolorbox}[enhanced,colback=white,colframe=Dp,arc=2mm,
+  title={\faGraduationCap\ GitHub Education (gratis)},fonttitle=\bfseries\color{white},colbacktitle=Dp]
+\footnotesize
+Con correo \texttt{@up.edu.mx} y verificación como docente:
+\begin{itemize}
+  \item \textbf{GitHub Team} gratuito: repositorios privados ilimitados.
+  \item \textbf{GitHub Copilot Pro} gratuito: asistente de IA para código y \LaTeX.
+  \item \textbf{GitHub Classroom}: tareas por alumno, entregas y calificación automática.
+\end{itemize}
+\end{tcolorbox}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{GitHub en el aula: cómo ayuda}
+\begin{columns}[T]
+\column{0.49\textwidth}
+\toolcard{\faHistory}{Banco de exámenes versionado}{un repositorio privado por materia con todos los exámenes en \LaTeX.}{recuperar cualquier versión anterior; reutilizar y mejorar reactivos semestre a semestre.}
+\toolcard{\faUsers}{Trabajo de academia}{varios profesores editan el mismo examen departamental.}{cada cambio queda registrado y se puede revisar antes de aceptarlo.}
+\column{0.49\textwidth}
+\toolcard{\faGlobe}{GitHub Pages}{publicar gratis el sitio de un curso desde un repositorio.}{programa, apuntes y ejercicios resueltos en una URL estable.}
+\toolcard{\faTasks}{GitHub Classroom}{repartir y recoger tareas de programación o análisis de datos.}{los alumnos practican el flujo que usarán en su primer empleo.}
+\end{columns}
+\vspace{4pt}
+\begin{warnbox}
+\scriptsize Exámenes y claves \textbf{solo en repositorios privados}. Un repositorio público es visible para cualquiera, incluidos sus alumnos.
+\end{warnbox}
+\end{frame}
+
+% =====================================================================
+\section{Por qué importa: el ámbito profesional}
+% =====================================================================
+
+\begin{frame}{Lo que dicen los empleadores}
+\begin{columns}[c]
+\column{0.32\textwidth}\centering
+{\Huge\color{Ac}\bfseries 39\%}\\[4pt]
+\small de las habilidades centrales de los trabajadores cambiarán hacia 2030
+\column{0.32\textwidth}\centering
+{\Huge\color{Md}\bfseries 2/3}\\[4pt]
+\small de los empleadores planean contratar talento con habilidades específicas de IA
+\column{0.32\textwidth}\centering
+{\Huge\color{Ac2}\bfseries 170\,M}\\[4pt]
+\small empleos nuevos y 92\,M desplazados hacia 2030 (saldo neto: +78\,M)
+\end{columns}
+\vspace{12pt}
+\begin{center}
+\scriptsize Fuente: World Economic Forum, \emph{The Future of Jobs Report 2025}, encuesta a más de 1\,000 empleadores en 55 economías.
+\end{center}
+\vspace{6pt}
+\begin{probox}
+La pregunta para el aula ya no es si los egresados usarán IA, sino si sabrán \textbf{usarla con criterio}: verificar, citar, decidir cuándo no usarla.
+\end{probox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Cada profesión, su herramienta}
+\centering
+\renewcommand{\arraystretch}{1.25}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Ámbito} & \textbf{Herramientas en uso} & \textbf{Qué entrenar en el aula}\\
+\midrule
+\faChartLine\ Finanzas y banca & Terminal Bloomberg con ASKB; Excel con IA & Contrastar la respuesta de la IA con el dato fuente\\
+\faCode\ Ingeniería y datos & GitHub, Copilot, Claude, notebooks & Leer y probar código generado; control de versiones\\
+\faBalanceScale\ Derecho & Asistentes legales con IA; investigación con fuentes & Verificar cada cita de jurisprudencia y ley\\
+\faBriefcase\ Consultoría y empresa & Asistentes internos, investigación profunda & Distinguir dato, supuesto y opinión en un reporte\\
+\faFlask\ Ciencia e investigación & \LaTeX, Overleaf, Elicit, Semantic Scholar & Revisión de literatura honesta; reproducibilidad\\
+\faHeartbeat\ Salud & Resúmenes de evidencia clínica & Fuente primaria antes que resumen\\
+\bottomrule
+\end{tabularx}
+\vspace{8pt}
+\begin{tipbox}
+En todos los renglones aparece lo mismo: \textbf{verificar}. Es la competencia transversal que más vale enseñar.
+\end{tipbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Actividad 3}
+\begin{actividadbox}[\faClock\ 7 minutos, por academia]
+\begin{enumerate}
+  \item Elijan \textbf{una} herramienta de esta sesión que se use en la profesión de sus alumnos.
+  \item Diseñen en 3 líneas una actividad de clase donde el alumno la use \emph{y además verifique} lo que produce.
+  \item Decidan: ¿cómo se evalúa? ¿qué tiene que entregar el alumno además del resultado?
+\end{enumerate}
+\end{actividadbox}
+\vspace{8pt}
+\centering\large\color{Dp} Cada academia comparte su actividad en un minuto.
+\end{frame}
+
+% =====================================================================
+\section{Riesgos, ética y límites}
+% =====================================================================
+
+\begin{frame}{Cinco riesgos que conviene conocer}
+\begin{enumerate}
+  \item \textbf{Alucinaciones} --- inventa datos y citas con total seguridad.
+  \item \textbf{Privacidad} --- aun con cuenta institucional, nada de datos personales de alumnos.
+  \item \textbf{Sesgos} --- reproduce los sesgos de los textos con los que fue entrenada.
+  \item \textbf{Dependencia} --- usarla para \emph{todo} le quita al alumno (y al profesor) la oportunidad de pensar.
+  \item \textbf{Confidencialidad} --- exámenes, claves y datos licenciados (como los de Bloomberg) no se publican ni se comparten fuera del uso autorizado.
+\end{enumerate}
+\vspace{8pt}
+\begin{center}
+\large\color{Dp}No usarla sigue siendo una opción válida. Si la usan, esto es lo que conviene vigilar.
+\end{center}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Honestidad académica}
+\begin{center}
+\Large\faGraduationCap\ \color{Dp}\textbf{¿Y los alumnos que la usan para hacer la tarea?}
+\end{center}
+\vspace{8pt}
+\begin{itemize}
+  \item Prohibirla por completo es una postura legítima; en la práctica es difícil de vigilar.
+  \item Otra opción es \textbf{redefinir la tarea}: pedir proceso, no solo producto (borradores, fuentes verificadas, explicación oral, historial de cambios en GitHub).
+  \item También se puede pedir que \textbf{declaren} si usaron IA, cuál y para qué.
+  \item Los exámenes presenciales en papel, generados con \LaTeX, siguen siendo la evaluación más robusta.
+\end{itemize}
+\vspace{6pt}
+\begin{tipbox}
+La misma regla aplica al profesor: si usa IA para generar un examen o una rúbrica, la revisa línea por línea antes de aplicarla.
+\end{tipbox}
+\end{frame}
+
+% =====================================================================
+\section{Buenas prácticas y cierre}
+% =====================================================================
+
+\begin{frame}{Las 3 R}
+\centering\small Una manera sencilla de usarla con cuidado:\\[10pt]
+\begin{columns}[c]
+\column{0.33\textwidth}\centering
+{\Huge\color{Ac}\faSearch}\\[8pt]
+{\Large\textbf{Revisar}}\\[4pt]
+\small no usar un resultado sin leerlo por completo y abrir sus fuentes
+\column{0.33\textwidth}\centering
+{\Huge\color{Ac2}\faIcon{pencil-alt}}\\[8pt]
+{\Large\textbf{Reescribir}}\\[4pt]
+\small ajustar el tono, los datos y el nivel al grupo real
+\column{0.33\textwidth}\centering
+{\Huge\color{Md}\faBalanceScale}\\[8pt]
+{\Large\textbf{Responsabilizarse}}\\[4pt]
+\small lo que se entrega a los alumnos sigue siendo responsabilidad del profesor
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{El semáforo del uso responsable}
+\begin{tcolorbox}[enhanced,colback=Ac2!8,colframe=Ac2,arc=2mm,title={\faCheckCircle\ Verde: sin problema},fonttitle=\bfseries\color{white},colbacktitle=Ac2]
+\small Ideas, borradores, resúmenes, material de apoyo, \LaTeX\ para un examen que luego revisarán, mapas de literatura.
+\end{tcolorbox}
+\vspace{4pt}
+\begin{tcolorbox}[enhanced,colback=Gd!15,colframe=Gd!70!black,arc=2mm,title={\faExclamationCircle\ Amarillo: revisar con cuidado},fonttitle=\bfseries\color{white},colbacktitle=Gd!70!black]
+\small Datos, citas o cifras específicas; reportes de investigación profunda; respuestas de ASKB; claves de examen; cualquier cosa que se vaya a calificar.
+\end{tcolorbox}
+\vspace{4pt}
+\begin{tcolorbox}[enhanced,colback=Al!8,colframe=Al,arc=2mm,title={\faTimesCircle\ Rojo: no hacerlo},fonttitle=\bfseries\color{white},colbacktitle=Al]
+\small Subir nombres, matrículas, calificaciones o trabajos de alumnos reales; publicar exámenes o datos licenciados en repositorios públicos.
+\end{tcolorbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Recursos para seguir aprendiendo}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{itemize}\small
+  \item \faIcon{feather-alt}\ \href{https://claude.ai}{\textbf{Claude}} y su \href{https://anthropic.skilljar.com}{academia gratuita} de cursos
+  \item \faBookOpen\ \href{https://notebooklm.google}{\textbf{NotebookLM}} --- tus materiales, tus respuestas
+  \item \faSearchPlus\ \href{https://elicit.com}{\textbf{Elicit}}, \href{https://consensus.app}{\textbf{Consensus}}, \href{https://www.semanticscholar.org}{\textbf{Semantic Scholar}}
+  \item \faChartLine\ \href{https://www.bloomberg.com/professional/products/bloomberg-terminal/education/certificate-courses/}{\textbf{Bloomberg Market Concepts}}
+\end{itemize}
+\column{0.5\textwidth}
+\begin{itemize}\small
+  \item \faLeaf\ \href{https://www.overleaf.com/learn}{\textbf{Overleaf Learn}} --- tutoriales de \LaTeX
+  \item \faIcon{file-alt}\ \href{https://ctan.org/pkg/exam}{\textbf{Clase exam}} (CTAN, con manual)
+  \item \faGithub\ \href{https://education.github.com/teachers}{\textbf{GitHub Education}} y \href{https://classroom.github.com}{\textbf{Classroom}}
+  \item \faGlobe\ \href{https://www.weforum.org/publications/the-future-of-jobs-report-2025/}{\textbf{WEF Future of Jobs 2025}}
+\end{itemize}
+\end{columns}
+\vspace{8pt}
+\begin{tipbox}
+Estas diapositivas, su código \LaTeX, una plantilla de examen y la guía de herramientas están en \href{https://github.com/IvliCaesar/ia-aula-profesores}{\textbf{github.com/IvliCaesar/ia-aula-profesores}}.
+\end{tipbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Cierre: ronda final}
+\begin{center}
+\Large\color{Dp}\faComments
+\end{center}
+\vspace{8pt}
+{\large En una palabra, en voz alta:}
+\begin{center}
+\Large\color{Ac}\emph{``¿Qué herramienta van a probar esta semana, y para qué?''}
+\end{center}
+\vspace{8pt}
+\centering\small Cada quien comparte con la persona de al lado; 2 o 3 lo dicen en voz alta para todo el grupo.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[Dp] (current page.south west) rectangle (current page.north east);
+  \fill[Ac!80] (current page.south east) circle (3.0);
+  \fill[Ac2!60] ([shift={(0.8,0.8)}]current page.north west) circle (1.6);
+\end{tikzpicture}
+\begin{center}
+\vspace{1.6cm}
+{\color{white}\Huge\bfseries ¡Gracias!}\\[16pt]
+{\color{Lt}\large César Galindo}\\
+{\color{white!80}\normalsize Profesor Investigador \quad\textbullet\quad Universidad Panamericana, Ciudad UP}\\[2pt]
+{\color{white!80}\normalsize \href{mailto:jcgalindo@up.edu.mx}{jcgalindo@up.edu.mx}}
+\end{center}
+\end{frame}
+
+\end{document}

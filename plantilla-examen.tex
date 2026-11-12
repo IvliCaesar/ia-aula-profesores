@@ -1,0 +1,78 @@
+% =====================================================================
+% Plantilla de examen con la clase exam.
+% - Versión del alumno: compilar tal cual.
+% - Clave del profesor: quitar el % de la línea \printanswers.
+% - Versión B: copiar el archivo y cambiar \newcommand{\version}{A}
+%   y los datos numéricos.
+% =====================================================================
+\documentclass[11pt,addpoints]{exam}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{xcolor}
+
+% \printanswers
+\newcommand{\version}{A}
+\renewcommand{\solutiontitle}{\noindent\textbf{Solución:}\enspace}
+\shadedsolutions
+\definecolor{SolutionColor}{rgb}{0.93,0.96,1}
+
+\pagestyle{headandfoot}
+\firstpageheader{Universidad Panamericana}{}{Versión \version}
+\runningheader{Finanzas I}{Examen parcial 1}{Versión \version}
+\footer{}{Página \thepage\ de \numpages}{}
+\pointpoints{punto}{puntos}
+\hqword{Pregunta}\hpword{Puntos}\hsword{Obtenidos}\htword{Total}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Finanzas I --- Examen parcial 1}\\[4pt]
+Duración: 90 minutos \quad\textbullet\quad Se permite calculadora financiera
+\end{center}
+
+\vspace{6pt}
+\noindent Nombre: \makebox[0.55\textwidth]{\hrulefill}\quad Grupo: \makebox[0.15\textwidth]{\hrulefill}
+
+\begin{center}
+\gradetable[h][questions]
+\end{center}
+
+\begin{questions}
+
+\question[10] Calcula el valor presente de \$10{,}000 que se recibirán dentro de 3 años si la tasa de descuento anual es $r = 10\%$.
+\begin{solution}
+$VP = \dfrac{10\,000}{(1.10)^3} = \dfrac{10\,000}{1.331} = 7\,513.15$.
+\end{solution}
+
+\question Un proyecto requiere una inversión inicial de \$1{,}000 y genera flujos de \$600 al final de los años 1 y 2. Con una tasa de descuento de $8\%$:
+\begin{parts}
+\part[5] Calcula el VPN.
+\begin{solution}
+$VPN = -1000 + \dfrac{600}{1.08} + \dfrac{600}{1.08^2} = -1000 + 555.56 + 514.40 = 69.96$.
+\end{solution}
+\part[5] ¿Conviene aceptar el proyecto? Justifica.
+\begin{solution}
+Sí: el VPN es positivo, de modo que el proyecto crea valor a la tasa de descuento dada.
+\end{solution}
+\end{parts}
+
+\question[5] La tasa interna de retorno (TIR) de un proyecto es la tasa que:
+\begin{choices}
+  \choice maximiza el VPN.
+  \CorrectChoice hace que el VPN sea igual a cero.
+  \choice iguala la tasa libre de riesgo.
+  \choice minimiza el periodo de recuperación.
+\end{choices}
+
+\question[5] Explica en tres renglones por qué un peso hoy vale más que un peso dentro de un año.
+\begin{solution}
+Porque el peso de hoy puede invertirse y generar rendimiento; además, el futuro conlleva incertidumbre e inflación. La tasa de descuento compensa ambos efectos.
+\end{solution}
+\makeemptybox{3cm}
+
+\end{questions}
+
+\end{document}
